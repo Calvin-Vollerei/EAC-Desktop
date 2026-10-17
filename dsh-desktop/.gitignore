@@ -103,3 +103,9 @@ build/*
 /lib/desktop/plugin-remove.js
 /scripts/eac-cli.js
 /scripts/fetch-pnpm.js
+/lib/desktop/full-composition.js
+
+# 完全体预装层：由 prepare-composition.mjs 从 EAC-Pack/dist 生成的构建产物
+# （约 0.88 GiB / 1.9 万文件，含 profile-seed node_modules 与 payload 分块）。
+# 只随打包装配，不入 Git；重建走 prepare-composition.mjs。
+/assets/full-pack/
