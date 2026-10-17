@@ -133,6 +133,7 @@ Companion plugins use Harness host/client contracts. The [staging script](tauri-
 | Protection | `dsh-plugin-shield` | Snapshots, health checks and rollback controls |
 | Localization | `dsh-eac-locale-compat` | English UI compatibility for companion and community plugins |
 | UI stability | `dsh-viewport-lock`, `dsh-settings-scroll-fix` | Viewport constraints and settings-panel wheel/overflow fixes |
+| Free models | `dsh-our-free-model` | Frontier models without login, signup or API keys, plus a local OpenAI gateway and usage dashboard |
 
 ### Extension distribution
 

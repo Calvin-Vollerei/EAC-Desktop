@@ -119,6 +119,7 @@ Rust 与 Node 使用 **stdio JSON-RPC** 通信，协议输出与诊断日志分�
 | 插件保护 | `dsh-plugin-shield` | 快照、体检与回滚入口 |
 | 语言兼容 | `dsh-eac-locale-compat` | 配套及社区插件的英文界面兼容 |
 | 界面稳定 | `dsh-viewport-lock`、`dsh-settings-scroll-fix` | 视口约束、设置面板滚轮与溢出滚动修复 |
+| 免密模型 | `dsh-our-free-model` | 免登录/免注册/免 API Key 接入前沿模型，含本地 OpenAI 网关与用量看板 |
 
 ### 扩展分发
 
