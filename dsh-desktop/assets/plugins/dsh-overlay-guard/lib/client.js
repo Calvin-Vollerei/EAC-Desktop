@@ -49,12 +49,37 @@ window.__ModuleLoader__.load({
       'body:not([data-ds-dark-theme]) [data-menu-material="translucent"] {',
       '  background-color: var(--dsh-overlay-guard-menu, rgba(250, 250, 252, 0.95)) !important;',
       '}',
-      // 3) 标题栏溢出压叠（后缀选择器：同构包保持 _headerActions 一类后缀）
+      // 3) 标题栏溢出压叠：grid 两列都允许收缩到 0；四组子容器允许收缩并裁剪。
+      //    只加 overflow 不够 —— auto 列不收缩时，第二列被压到 0，corner 仍会溢出。
+      '[class*="_header"] {',
+      '  grid-template-columns: minmax(0, auto) minmax(0, 1fr) !important;',
+      '}',
       '[class*="_headerLeading"],',
       '[class*="_headerActions"],',
-      '[class*="_headerUtilities"] {',
+      '[class*="_headerUtilities"],',
+      '[class*="_headerCorner"] {',
       '  min-width: 0 !important;',
+      '  flex-shrink: 1 !important;',
       '  overflow: hidden !important;',
+      '}',
+      // 3b) 右侧栏内部容器也不许把内容顶出面板边界。
+      '[data-sidebar-right-panel] [data-dockkit-host],',
+      '[data-sidebar-right-panel] [data-dockkit-pane] {',
+      '  min-width: 0 !important;',
+      '}',
+      // 4) 智能体团队触发器：聊天区被挤窄时 label 会逐字竖排。
+      //    它的 trigger 是 inline-flex 且没有 nowrap；对齐对话标题
+      //    （.uHSrHa_crumb）的做法：nowrap + ellipsis。
+      //    插件自带的 @container (width<=480px) 隐藏 label 仍是更窄时的兜底。
+      '[class*="_headerActions"] [class*="_trigger"]:has([class*="_triggerLabel"]) {',
+      '  min-width: 0 !important;',
+      '  white-space: nowrap !important;',
+      '}',
+      '[class*="_headerActions"] [class*="_triggerLabel"] {',
+      '  white-space: nowrap !important;',
+      '  overflow: hidden !important;',
+      '  text-overflow: ellipsis !important;',
+      '  min-width: 0 !important;',
       '}',
     ].join('\n')
 
