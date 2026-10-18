@@ -177,12 +177,12 @@
         "excludedPaths": [
           "vendor"
         ],
-        "fileCount": 74,
+        "fileCount": 75,
         "license": "MIT",
         "packageName": "dsh-our-free-model",
         "packageVersion": "2.5.2",
         "path": "dsh-desktop/assets/plugins/dsh-our-free-model",
-        "treeSha256": "8c9b18c2b7a69c282d4d3bf3e832362800465a771e42cd249d9840a723cce638"
+        "treeSha256": "c41f7fbc5295ea675f7e0656e2fae3ca9373aef03f9969c81fdc2ff592be3f0f"
       },
       "manifestEntrySha256": "f5964420a4a436adc926c63fd14787753c8e3804cb817d4af7f2f41adc691b6c",
       "patchFiles": [],
@@ -192,7 +192,7 @@
       "runtimeUpdate": "disabled",
       "source": {
         "kind": "unknown",
-        "sha256": "8c9b18c2b7a69c282d4d3bf3e832362800465a771e42cd249d9840a723cce638",
+        "sha256": "c41f7fbc5295ea675f7e0656e2fae3ca9373aef03f9969c81fdc2ff592be3f0f",
         "version": "2.5.2"
       },
       "sourceCommit": null
