@@ -51,6 +51,36 @@
 - 同步版本号到产品配置和发布产物命名。
 - NSIS 与便携包都要验证真实目录结构。
 - 不能只验证 `target/release`，必须验证安装后或解压后的运行树。
+- **体积与裁剪预算见 [ADR 0011](../../../../docs/adr/0011-packaging-budget-and-trimming.md)**：
+  lite ≤ 260 MB / ≤ 20000 文件，full ≤ 1.1 GB / ≤ 40000 文件。改产物形态前先读该 ADR。
+
+### 体积红线
+
+- **WebView2 不得随包。** 只允许 `downloadBootstrapper`（默认）、`offlineInstaller`
+  （+127 MB，可断网）或 `fixedRuntime`（+180 MB，Tauri 原生模式）。
+  禁止「`skip` + 手工拷固定版运行时目录」—— 那条路径只搬文件不接线，
+  6.0.1 因此白占 294.7 MB（wry 传 `PCWSTR::null()`，永远用系统运行时）。
+- **平台裁剪三平台对称。** `stage-resources.mjs` 的 `linux` / `darwin` 分支各自
+  裁剪跨平台 payload，`win32` 分支曾长期缺失，实测 Windows 产物夹带 48 个
+  异平台 prebuilds（15.92 MB），其中 `node-pty/prebuilds/win32-arm64` 单目录 11.22 MB。
+- **`assertNoUnexpectedNativePlatform` 只看包名**，对包内 `prebuilds/` 子目录无效，
+  不能当作平台裁剪的替代品。
+- **死重文件不进 staged 树**：`.d.ts` / `.map` / `.md` 直接排除；`.ts` 仅当未被
+  `exports` 引用时排除（当前 13 处例外）。裁剪只作用于 staging，不改源树。
+
+### 编排脚本必须从配置派生
+
+任务根的 `make-lite-staged.mjs` / `make-portable-lite.mjs` / `bundle-lite.mjs`
+**在仓库外，`npm test` 覆盖不到**，因此更容易腐化。它们不得硬编码：
+
+- `tauri.conf.json` 的 `bundle.resources` 键集
+- 随包内置插件数（`BUILTIN_PLUGIN_DIRS` 长度）
+- 资源目录清单（`LITE_RESOURCE_DIRS`）
+
+硬编码的代价已经发生过一次：代码把 WebView2 去掉、builtin 从 9 改到 10 之后，
+四处断言全部失效，构建链第一步就断，而没有任何测试能提前发现。
+
+**规则：`tauri-shell/` 内新增任何影响产物形态的配置项时，必须同步检查任务根脚本。**
 
 ## 关键文件
 
@@ -59,10 +89,13 @@
 - Agent 更新：`dsh-desktop/updater.js`
 - 内置插件更新：`dsh-desktop/plugin-updater.js`
 - Tauri 资源装配：`tauri-shell/stage-resources.mjs`
+- 生产依赖装配与裁剪：`tauri-shell/stage-node-modules.mjs`
+- 平台裁剪原语：`tauri-shell/stage-platform-prune.mjs`
 - 便携包：`tauri-shell/make-portable.mjs`
 - NSIS 钩子：`tauri-shell/installer-hooks.nsh`
 - Tauri 配置：`tauri-shell/tauri.conf.json`
 - 发布工作流：`.github/workflows/release-tauri.yml`
+- 体积预算：`docs/adr/0011-packaging-budget-and-trimming.md`
 
 ## 测试组
 
