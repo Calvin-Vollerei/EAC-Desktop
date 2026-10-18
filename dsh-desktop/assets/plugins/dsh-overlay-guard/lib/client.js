@@ -67,19 +67,27 @@ window.__ModuleLoader__.load({
       '[data-sidebar-right-panel] [data-dockkit-pane] {',
       '  min-width: 0 !important;',
       '}',
-      // 4) 智能体团队触发器：聊天区被挤窄时 label 会逐字竖排。
-      //    它的 trigger 是 inline-flex 且没有 nowrap；对齐对话标题
-      //    （.uHSrHa_crumb）的做法：nowrap + ellipsis。
-      //    插件自带的 @container (width<=480px) 隐藏 label 仍是更窄时的兜底。
-      '[class*="_headerActions"] [class*="_trigger"]:has([class*="_triggerLabel"]) {',
+      // 4) 顶栏文字控件：聊天区被挤窄时逐字竖排。
+      //    已知三处同构缺陷，都是 inline-flex 且没有 white-space:nowrap：
+      //      - 智能体团队  .bl0tdG_trigger > .bl0tdG_triggerLabel
+      //      - 后台任务    .MCnNHW_trigger > .MCnNHW_count
+      //      - 预设标签    .fZTkxG_label —— 自身已带 nowrap+ellipsis，但缺
+      //                    flex-shrink:0，在 flex 行里被压成 2px 宽的一条竖线
+      //    （这条只有量实际尺寸才能发现，光读 CSS 看不出来）
+      //    统一处理而不是逐个救火：用 :is() 一次覆盖顶栏三组容器，
+      //    并把 flex-shrink 归零，避免文字被压扁而不是截断。
+      ':is([class*="_headerActions"], [class*="_headerUtilities"], [class*="_headerCorner"]) [class*="_trigger"] {',
       '  min-width: 0 !important;',
       '  white-space: nowrap !important;',
       '}',
-      '[class*="_headerActions"] [class*="_triggerLabel"] {',
+      ':is([class*="_headerActions"], [class*="_headerUtilities"], [class*="_headerCorner"]) [class*="_triggerLabel"],',
+      ':is([class*="_headerActions"], [class*="_headerUtilities"], [class*="_headerCorner"]) [class*="_count"],',
+      ':is([class*="_headerActions"], [class*="_headerUtilities"], [class*="_headerCorner"]) [class*="_label"] {',
       '  white-space: nowrap !important;',
       '  overflow: hidden !important;',
       '  text-overflow: ellipsis !important;',
       '  min-width: 0 !important;',
+      '  flex-shrink: 0 !important;',
       '}',
     ].join('\n')
 
